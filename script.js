@@ -25,37 +25,37 @@ function move() {
 		window.currentClick += 1;
 	};
 
-	if (checkWin()) {
-		gameover()
-	}
+	checkLines($(this).text());
+	checkDiagonal($(this).text());
 };
 
-function checkWin() {
+function checkLines(player) {
 	for (var i = 1; i <= 3; i++) {
-
 		var $rows = $('.row:nth-child(' + i + ')').text();
 		var $columns = $('.cell:nth-child(' + i + ')').text();
-		console.log($rows);
-		console.log($columns);
 		if (( $columns === ' X  X  X ' || $columns === ' O  O  O ') || ( $rows === ' X  X  X ' || $rows === ' O  O  O ')) {
-			gameover();
+			gameover(player);
 		}
 	};
+
 };
 
-	// if ($('.cell:first-child').text() === " X  X  X " ) {
-	// 	gameover('x');
-	// }
-	// else if ($('.cell:nth-child(2)').text() === " X  X  X ") {
-	// 	gameover('x');
-	// }
-	// else if ($('.cell:last-child').text() === " X  X  X ") {
-	// 	gameover('x');
-	// }
+function checkDiagonal(player) {
+		var $top_left = $('.cell').eq(0).text();
+		var $top_right = $('.cell').eq(2).text();
+		var $center = $('.cell').eq(4).text();
+		var $bottom_left = $('.cell').eq(6).text();
+		var $bottom_right = $('cell').eq(8).text();
 
-function gameover(winner) {
-	$('h1').append('<p> Game over </p>');
-	$('div').on('click', function() {
-		location.reload();
-	});
+		if ((($top_left === $center) && ($top_left === $bottom_right)) && ($center)) {
+			gameover(player);
+		}
+		else if ((($top_right === $center) && ($center === $bottom_left)) && ($center)) {
+			gameover(player);
+		};
+};
+
+
+function gameover(player) {
+	$('h1').append('<p> Game over ' + player + ' wins </p>');
 };
