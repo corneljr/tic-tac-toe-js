@@ -1,3 +1,21 @@
+* {
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;    
+	box-sizing: border-box;  
+}
+
+body {
+	background-color: #bdc3c7;
+}
+
+.black {
+	background-color: black;
+}
+
+.center {
+	text-align: center;
+}
+
 .filled {
 	position: absolute;
 	top: 0;
@@ -8,4 +26,28 @@
 	overflow: hidden;
 	font-size: 200px;
 	text-align: center;
+}
+
+.cell {
+	border: 1px solid black;
+	height: 180px;
+	width: 180px;
+	display: block;
+	float: left;
+	background-color: white;
+	font-size: 150px;
+	text-align: center;
+}
+
+.row {
+	width: 600px;
+}
+
+.container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 540px;
+	height: 540px;
+	margin-left: auto;
+	margin-right: auto;
 }

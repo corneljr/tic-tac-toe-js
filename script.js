@@ -1,61 +1,68 @@
-function createBoard() {
-	for (var i = 0; i < 3; i++) {
-		$('.container').append('<div class="row"></div>');
-		for (var j = 0; j < 3; j++) {
-			$('.row:last-child').append('<div class="cell"></div>');
-
-		};
-	};
-	$('.cell').css({'border': '1px solid black', 'height':'200px', 'width':'200px', 'display':'inline-block', 'position':'relative'});
-};$('.container').css('height', '600px'); 
-
 $(document).ready( function() {
-	createBoard();
 	window.currentClick = 0;
-	$('.cell').on('click', move);
+
+	$('.cell').on('mouseenter', function() {
+		if (!$(this).text()) {
+		$(this).css({backgroundColor: 'black'})
+		};
+	});
+	$('.cell').on('mouseleave', function() {
+		$(this).css({backgroundColor: 'white'})
+	});
+	$('.cell').on('click', move)
 });
 
 function move() {
-	if ((window.currentClick % 2 === 0) && !($(this).text())) {
-		$(this).append('<div class="filled"> X </div>');
+	if (window.currentClick % 2 === 0) {
+		$(this).text("X");
+		$(this).mouseleave();
 		window.currentClick += 1;
+		$(this).off('click', move);
 	}
-	else if (!($(this).text())) {
-		$(this).append('<div class="filled"> O </div>');
+	else {
+		$(this).text("O");
+		$(this).mouseleave();
 		window.currentClick += 1;
+		$(this).off('click', move);
 	};
 
-	checkLines($(this).text());
-	checkDiagonal($(this).text());
-};
+	checkWinner()
+}
 
-function checkLines(player) {
-	for (var i = 1; i <= 3; i++) {
-		var $rows = $('.row:nth-child(' + i + ')').text();
-		var $columns = $('.cell:nth-child(' + i + ')').text();
-		if (( $columns === ' X  X  X ' || $columns === ' O  O  O ') || ( $rows === ' X  X  X ' || $rows === ' O  O  O ')) {
-			gameover(player);
-		}
-	};
-
-};
-
-function checkDiagonal(player) {
-		var $top_left = $('.cell').eq(0).text();
-		var $top_right = $('.cell').eq(2).text();
-		var $center = $('.cell').eq(4).text();
-		var $bottom_left = $('.cell').eq(6).text();
-		var $bottom_right = $('cell').eq(8).text();
-
-		if ((($top_left === $center) && ($top_left === $bottom_right)) && ($center)) {
-			gameover(player);
-		}
-		else if ((($top_right === $center) && ($center === $bottom_left)) && ($center)) {
-			gameover(player);
+function checkWinner() {
+	var winners = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+	$.each(winners, function(index,value) {
+		if (cellContents(value[0])) {
+			if ((cellContents(value[0]) === cellContents(value[1])) && (cellContents(value[0]) === cellContents(value[2]))) {
+				winningCells([value[0],value[1],value[2]]);
+				gameover(cellContents(value[0]));
+			}
+			else if (window.currentClick === 9) {
+				gameover('draw');
+			};
 		};
-};
+	});
+	return false;
+}
 
+function cellContents(num) {
+	return $('.cell').eq(num).text();
+}
 
-function gameover(player) {
-	$('h1').append('<p> Game over ' + player + ' wins </p>');
-};
+function winningCells(arr) {
+	$.each(arr, function(index,cell) {
+		$('.cell').eq(cell).css({backgroundColor: 'green'});
+	});
+	$('.cell').off('click');
+	$('.cell').off('mouseenter');
+	$('.cell').off('mouseleave');
+}
+
+function gameover(result) {
+	if (result === 'draw') {
+		$('h1').text(' This game ends in a draw');
+	}
+	else {
+		$('h1').text('Game over, ' + result + ' wins!');
+	}
+}
